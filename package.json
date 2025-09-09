@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/zoro-sishui/Fragements/issues"
   },
-  "homepage": "https://github.com/zoro-sishui/Fragements#readme"
+  "homepage": "https://github.com/zoro-sishui/Fragements#readme",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
 }
