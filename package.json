@@ -1,0 +1,21 @@
+{
+  "name": "fragements",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoro-sishui/Fragements.git"
+  },
+  "keywords": [],
+  "author": "Prince Roka Magar",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/zoro-sishui/Fragements/issues"
+  },
+  "homepage": "https://github.com/zoro-sishui/Fragements#readme"
+}
