@@ -10,6 +10,14 @@ const logger = require('./logger');
 // Get our express app instance
 const app = require('./app');
 
+// If we're doing debug logging, log all environment variables
+if (process.env.LOG_LEVEL === 'debug') {
+  Object.entries(process.env).forEach(([key, value]) => {
+    logger.debug(`${key}=${value}`);
+  });
+  
+}
+
 // Get the desired port from the process' environment. Default to `8080`
 const port = parseInt(process.env.PORT || '8080', 10);
 
