@@ -1,4 +1,4 @@
-# Fragements
+# Fragments
 
 This repository contains the lab work for **Fragments** below are the basic requirements and the process the run each process.
 
