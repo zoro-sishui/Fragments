@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './.env' });// src/app.js
+require('dotenv').config({ path: './.env' }); // src/app.js
 
 const express = require('express');
 const cors = require('cors');
@@ -29,6 +29,9 @@ app.use(cors());
 
 // Use gzip/deflate compression middleware
 app.use(compression());
+
+//for the routes
+app.use('/', require('./routes'));
 
 // Define a simple health check route. If the server is running
 // we'll respond with a 200 OK.  If not, the server isn't healthy.
