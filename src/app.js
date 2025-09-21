@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const passport = require('passport');
 
 // author and version from our package.json file
 // TODO: make sure you have updated your name in the `author` section
@@ -14,6 +15,9 @@ const pino = require('pino-http')({
   // Use our default logger instance, which is already configured
   logger,
 });
+
+//imported strategy from auth.js
+const { strategy } = require('./auth');
 
 // Create an express app instance we can use to attach middleware and HTTP routes
 const app = express();
@@ -29,6 +33,12 @@ app.use(cors());
 
 // Use gzip/deflate compression middleware
 app.use(compression());
+
+//Registering the strategy with Passport
+passport.use(strategy());
+
+// Initialize Passport 
+app.use(passport.initialize());
 
 //for the routes
 app.use('/', require('./routes'));
