@@ -25,9 +25,10 @@ router.get('/', (req, res) => {
   // Send a 200 'OK' response
   res.status(200).json({
     status: 'ok',
+    fragments: [],
     author,
     // Use your own GitHub URL for this!
-    githubUrl: 'https://github.com/REPLACE_WITH_YOUR_GITHUB_USERNAME/fragments',
+    githubUrl: 'https://github.com/zoro-sishui/fragements',
     version,
   });
 });
