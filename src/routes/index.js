@@ -4,6 +4,8 @@ const express = require('express');
 
 const {authenticate} = require('../auth');
 
+const {createSuccessResponse} = require('../response');
+
 // version and author from package.json
 const { version, author } = require('../../package.json');
 
@@ -23,14 +25,14 @@ router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
   // Send a 200 'OK' response
-  res.status(200).json({
-    status: 'ok',
-    fragments: [],
+  res.status(200).json(
+    createSuccessResponse({
     author,
     // Use your own GitHub URL for this!
     githubUrl: 'https://github.com/zoro-sishui/fragements',
     version,
-  });
+  })
+  );
 });
 
 module.exports = router;

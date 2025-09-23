@@ -2,8 +2,8 @@ const request = require('supertest');
 const app = require('../../src/app');
 
 
-test('should return 404 for non-existent routes', async () => {
-  const response = await request(app).get('/non-existent-route');
+test('should return 404 s', async () => {
+  const response = await request(app).get('/some-nonexistent-route');
   expect(response.status).toBe(404);
   expect(response.body).toEqual({
     status: 'error',
