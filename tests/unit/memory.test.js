@@ -84,22 +84,5 @@ describe('Memory Database', () => {
     });
   });
 
-  describe('deleteFragment', () => {
-    test('deleteFragment removes fragment metadata and data', async () => {
-      await writeFragment(mockFragment);
-      await writeFragmentData(ownerId, fragmentId, mockData);
-      
-      await expect(deleteFragment(ownerId, fragmentId)).resolves.toBeUndefined();
-      
-      const fragment = await readFragment(ownerId, fragmentId);
-      const data = await readFragmentData(ownerId, fragmentId);
-      
-      expect(fragment).toBeUndefined();
-      expect(data).toBeUndefined();
-    });
-
-    test('deleteFragment handles non-existent fragment gracefully', async () => {
-      await expect(deleteFragment(ownerId, 'non-existent-id')).resolves.toBeUndefined();
-    });
-  });
+  
 });

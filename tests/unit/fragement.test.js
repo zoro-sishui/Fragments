@@ -272,8 +272,6 @@ describe('Fragment class', () => {
       expect(deletedFragment).toBeNull();
     });
 
-    // Note: Error handling tests for database failures are complex to mock properly
-    // The main functionality is covered by other tests, and we have 91%+ coverage
 
     test('isSupportedType handles invalid content-type strings', () => {
       expect(Fragment.isSupportedType('invalid-content-type')).toBe(false);

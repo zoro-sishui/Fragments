@@ -22,7 +22,6 @@ describe('GET /v1/fragments', () => {
 
   // Test that the fragments array contains created fragments
   test('authenticated users get their fragments in the array', async () => {
-    // Create a fragment first
     const data = 'This is a test fragment for listing';
     const postRes = await request(app)
       .post('/v1/fragments')
@@ -44,9 +43,9 @@ describe('GET /v1/fragments', () => {
     expect(getRes.body.fragments).toContain(fragmentId);
   });
 
-  // Test the expand=1 query parameter
+  // Testquery parameter
   test('authenticated users get expanded fragments with expand=1', async () => {
-    // Create a fragment first
+    
     const data = 'This is a test fragment for expanded listing';
     const postRes = await request(app)
       .post('/v1/fragments')
@@ -57,7 +56,7 @@ describe('GET /v1/fragments', () => {
     expect(postRes.statusCode).toBe(201);
     const fragment = postRes.body.fragment;
     
-    // Get expanded fragments list
+    // Get  fragments list
     const getRes = await request(app)
       .get('/v1/fragments?expand=1')
       .auth('user2@email.com', 'password2');
@@ -78,7 +77,6 @@ describe('GET /v1/fragments', () => {
 
   // Test that users only see their own fragments
   test('authenticated users only see their own fragments', async () => {
-    // Create fragments with different users
     const data1 = 'User1 fragment';
     const data2 = 'User2 fragment';
     
