@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../../src/app');
 
-
+//test if there are any routes which doesn't exist
 test('should return 404 s', async () => {
   const response = await request(app).get('/some-nonexistent-route');
   expect(response.status).toBe(404);
@@ -14,6 +14,7 @@ test('should return 404 s', async () => {
   });
 });
 
+//test 200 for the root route
 test('should return 200 for root route', async () => {
   const response = await request(app).get('/');
   expect(response.status).toBe(200);
@@ -24,23 +25,17 @@ test('should return 200 for root route', async () => {
   expect(response.headers['cache-control']).toBe('no-cache');
 });
 
-// Test error handling middleware
+// Testing error handling middleware
 test('should handle server errors with error middleware', async () => {
-  // Create a temporary route that throws an error
   const express = require('express');
   const errorApp = express();
-  
-  // Add the same middleware as main app
   errorApp.use(require('../../src/routes'));
-  
-  // Add a route that throws an error
   errorApp.get('/test-error', (req, res, next) => {
     const error = new Error('Test server error');
     error.status = 500;
     next(error);
   });
   
-  // Add the same error handler as main app
   const { createErrorResponse } = require('../../src/response');
   const logger = require('../../src/logger');
   
