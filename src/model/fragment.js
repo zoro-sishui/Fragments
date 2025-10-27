@@ -14,6 +14,8 @@ const {
   deleteFragment,
 } = require('./data/memory');
 
+const db = {};
+
 class Fragment {
   constructor({ id = randomUUID(), ownerId, created = new Date(), updated = new Date(), type, size = 0 }) {
     if (!ownerId || !type) {
@@ -37,6 +39,7 @@ class Fragment {
     this.size = size;
   }
 
+
   /**
    * Get all fragments (id or full) for the given user
    * @param {string} ownerId user's hashed email
@@ -54,6 +57,45 @@ class Fragment {
       throw new Error(`Unable to fetch fragments for user ${ownerId}: ${error.message}`);
     }
   }
+
+// assignment 2
+  static async ListFragments(ownerId, expand = false) {
+  const fragmentsForUser = db[ownerId] || {};
+  const ids = Object.keys(fragmentsForUser);
+
+  if (!expand) return ids;  // just return IDs if not expanding
+
+  // Return full metadata for each fragment
+  return ids.map(id => {
+    const { ownerId, type, created, updated, size } = fragmentsForUser[id];
+    return { id, ownerId, type, created, updated, size };
+  });
+}
+
+static async writeFragment(fragment) {
+  if (!db[fragment.ownerId]) db[fragment.ownerId] = {};
+  db[fragment.ownerId][fragment.id] = fragment;
+}
+
+static async readFragment(ownerId, id) {
+  return db[ownerId]?.[id] || null;
+}
+
+static async deleteFragment(ownerId, id) {
+  if (db[ownerId]) delete db[ownerId][id];
+}
+
+static async writeFragmentData(ownerId, id, data) {
+  if (!db[ownerId] || !db[ownerId][id]) throw new Error('Fragment not found');
+  db[ownerId][id].data = data;
+  db[ownerId][id].size = data.length;
+}
+
+static async readFragmentData(ownerId, id) {
+  if (!db[ownerId] || !db[ownerId][id]) throw new Error('Fragment not found');
+  return db[ownerId][id].data || Buffer.from('');
+}
+
 
   /**
    * Gets a fragment for the user by the given id.
