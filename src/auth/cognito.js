@@ -24,7 +24,6 @@ logger.info('Using AWS Cognito for auth');
 const jwtVerifier = CognitoJwtVerifier.create({
   userPoolId: process.env.AWS_COGNITO_POOL_ID,
   clientId: process.env.AWS_COGNITO_CLIENT_ID,
-  // Expect an ID token because the UI sends id_token (token_use === 'id')
   tokenUse: 'id',
 });
 
