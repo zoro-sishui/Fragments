@@ -24,8 +24,8 @@ logger.info('Using AWS Cognito for auth');
 const jwtVerifier = CognitoJwtVerifier.create({
   userPoolId: process.env.AWS_COGNITO_POOL_ID,
   clientId: process.env.AWS_COGNITO_CLIENT_ID,
-  // We expect an Identity Token (vs. Access Token)
-  tokenUse: 'access',
+  // Expect an ID token because the UI sends id_token (token_use === 'id')
+  tokenUse: 'id',
 });
 
 // At startup, download and cache the public keys (JWKS) we need in order to
@@ -48,6 +48,9 @@ module.exports.strategy = () =>
     try {
       // Verify this JWT
       const user = await jwtVerifier.verify(token);
+      if (!user.email) {
+        logger.warn({ user }, 'Verified token but no email claim; fragments ownership hashing may fail');
+      }
       logger.debug({ user }, 'verified user token');
 
       // Create a user, but only bother with their email
