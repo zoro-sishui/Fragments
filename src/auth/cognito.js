@@ -25,7 +25,7 @@ const jwtVerifier = CognitoJwtVerifier.create({
   userPoolId: process.env.AWS_COGNITO_POOL_ID,
   clientId: process.env.AWS_COGNITO_CLIENT_ID,
   // We expect an Identity Token (vs. Access Token)
-  tokenUse: 'id',
+  tokenUse: 'access',
 });
 
 // At startup, download and cache the public keys (JWKS) we need in order to
