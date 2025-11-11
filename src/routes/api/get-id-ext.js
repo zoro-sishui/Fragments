@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
     }
 
     // If same type requested, return as-is
-    const originalMime = fragment.mimeType; // without charset
+    const originalMime = contentType.parse(fragment.type).type; // without charset
     if (originalMime === targetMime) {
       // Preserve original Content-Type with charset if present
       res.setHeader('Content-Type', fragment.type);
