@@ -5,7 +5,7 @@ const { createErrorResponse } = require('../../response');
 const logger = require('../../logger');
 const contentType = require('content-type');
 
-// Lazy init markdown-it to avoid cost unless needed
+
 let mdRenderer;
 function getMarkdownRenderer() {
   if (!mdRenderer) {
@@ -53,9 +53,9 @@ module.exports = async (req, res) => {
     }
 
     // If same type requested, return as-is
-    const originalMime = contentType.parse(fragment.type).type; // without charset
+    const originalMime = contentType.parse(fragment.type).type; 
     if (originalMime === targetMime) {
-      // Preserve original Content-Type with charset if present
+      // Preserve original Content-Type if present
       res.setHeader('Content-Type', fragment.type);
       return res.status(200).send(data);
     }
