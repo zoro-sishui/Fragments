@@ -19,7 +19,11 @@ services:
     # Ports to publish
     ports:
       - '8080:8080'
- # DynamoDB Local, see: https://hub.docker.com/r/amazon/dynamodb-local
+    depends_on:
+      - dynamodb-local
+      - localstack
+
+  # DynamoDB Local, see: https://hub.docker.com/r/amazon/dynamodb-local
   dynamodb-local:
     image: amazon/dynamodb-local
     ports:
@@ -28,3 +32,18 @@ services:
     # Run the database in memory, see:
     # https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.UsageNotes.html
     command: ['-jar', 'DynamoDBLocal.jar', '-inMemory']
+
+  # LocalStack for S3, see https://docs.localstack.cloud/get-started/#docker-compose
+  # Interact via awscli-local, see https://docs.localstack.cloud/integrations/aws-cli/#installation
+  localstack:
+    # https://hub.docker.com/r/localstack/localstack
+    image: localstack/localstack
+    ports:
+      - '4566:4566'
+    environment:
+      # See https://docs.localstack.cloud/localstack/configuration/ and
+      # https://hub.docker.com/r/localstack/localstack for config details.
+      # We only want to run S3
+      - SERVICES=s3
+      # We're always working in us-east-1
+      - DEFAULT_REGION=us-east-1
