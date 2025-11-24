@@ -36,5 +36,6 @@ router.get('/fragments/:id.:ext', require('./get-id-ext'));
 // Return only fragment metadata
 router.get('/fragments/:id/info', require('./get-id-info'));
 router.get('/fragments/:id', require('./get-id'));
+router.delete('/fragments/:id', require('./delete-id'));
 
 module.exports = router;

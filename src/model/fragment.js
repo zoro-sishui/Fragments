@@ -174,6 +174,18 @@ static async readFragmentData(ownerId, id) {
   }
 
   /**
+   * Deletes the fragment's data and metadata from the database
+   * @returns Promise<void>
+   */
+  async delete() {
+    try {
+      await deleteFragment(this.ownerId, this.id);
+    } catch (error) {
+      throw new Error(`Unable to delete fragment ${this.id}: ${error.message}`);
+    }
+  }
+
+  /**
    * Returns the mime type (e.g., without encoding) for the fragment's type:
    * "text/html; charset=utf-8" -> "text/html"
    * @returns {string} fragment's mime type (without encoding)
