@@ -4,7 +4,7 @@ coverage/
 node_modules/
 tests/
 !tests/.htpasswd
-# .env
+.env
 eslint.config.mjs
 .git/
 .gitignore
