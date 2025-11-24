@@ -69,3 +69,35 @@ jobs:
           push: true
           # Use the git tag version and `latest`
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}, ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
+
+      # We need to update our fragment's Task Definition JSON
+      # (i.e., fragments-definition.json) to use the newly
+      # updated Docker Image to use (i.e., the tag we just pushed to ECR).
+      # We can also update/set the environment variables if we want.
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: update-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPO: fragments
+          VERSION_TAG: ${{ github.ref_name }}
+        with:
+          task-definition: fragments-definition.json
+          container-name: fragments
+          # Use the image we just built and pushed to ECR for this tag
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
+          # Add all the necessary environment variables
+          environment-variables: |
+            NODE_ENV=production
+            LOG_LEVEL=info
+            AWS_REGION=us-east-1
+            AWS_S3_BUCKET_NAME=fragments
+
+      # Deploy the updated task definition to our ECS service
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
+          service: fragments
+          cluster: fragments
+          wait-for-service-stability: true
