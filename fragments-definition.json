@@ -1,6 +1,6 @@
 {
   "ipcMode": null,
-  "executionRoleArn": "arn:aws:iam::0582624252223:role/LabRole",
+  "executionRoleArn": "arn:aws:iam::058264245223:role/LabRole",
   "containerDefinitions": [
     {
       "dnsSearchDomains": null,
