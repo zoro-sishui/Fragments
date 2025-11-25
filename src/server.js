@@ -10,20 +10,19 @@ const logger = require('./logger');
 // Get our express app instance
 const app = require('./app');
 
+// Get the desired port from the process' environment. Default to `8080`
+const port = parseInt(process.env.PORT || '8080', 10);
+
 // If we're doing debug logging, log all environment variables
 if (process.env.LOG_LEVEL === 'debug') {
   Object.entries(process.env).forEach(([key, value]) => {
     logger.debug(`${key}=${value}`);
   });
-  
 }
 
+// Determine storage type
 const storageType = process.env.STORAGE_TYPE || 'memory';
 logger.info(`Server started on port ${port}, using storage: ${storageType}`);
-
-
-// Get the desired port from the process' environment. Default to `8080`
-const port = parseInt(process.env.PORT || '8080', 10);
 
 // Start a server listening on this port
 const server = stoppable(
