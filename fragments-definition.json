@@ -1,38 +1,16 @@
 {
-  "family": "fragments-task",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": [
-    "FARGATE"
+  "compatibilities": [
+    "EC2",
+    "FARGATE",
+    "MANAGED_INSTANCES"
   ],
-  "cpu": "256",
-  "memory": "512",
-  "executionRoleArn": "arn:aws:iam::058264245223:role/LabRole",
-  "taskRoleArn": "arn:aws:iam::058264245223:role/LabRole",
   "containerDefinitions": [
     {
-      "name": "fragments",
-      "image": "058264245223.dkr.ecr.us-east-1.amazonaws.com/fragments:latest",
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp",
-          "appProtocol": "http"
-        }
-      ],
+      "cpu": 256,
       "environment": [
         {
-          "name": "NODE_ENV",
-          "value": "production"
-        },
-        {
-          "name": "LOG_LEVEL",
-          "value": "info"
-        },
-        {
-          "name": "PORT",
-          "value": "8080"
+          "name": "AWS_COGNITO_POOL_ID",
+          "value": "us-east-1_5H83Huaqe"
         },
         {
           "name": "AWS_REGION",
@@ -43,23 +21,96 @@
           "value": "proka-fragments"
         },
         {
-          "name": "AWS_COGNITO_POOL_ID",
-          "value": "us-east-1_5H83Huaqe"
+          "name": "PORT",
+          "value": "80"
         },
         {
           "name": "AWS_COGNITO_CLIENT_ID",
           "value": "4kk051vpb4itnl8k2237i0ogvb"
         }
       ],
+      "environmentFiles": [],
+      "essential": true,
+      "image": "058264245223.dkr.ecr.us-east-1.amazonaws.com/fragments:latest",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/fragments-task",
+          "awslogs-create-group": "true",
           "awslogs-region": "us-east-1",
-          "awslogs-stream-prefix": "ecs",
-          "awslogs-create-group": "true"
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      },
+      "memoryReservation": 512,
+      "mountPoints": [],
+      "name": "fragments-container",
+      "portMappings": [
+        {
+          "appProtocol": "http",
+          "containerPort": 80,
+          "hostPort": 80,
+          "name": "fragments-container-80-tcp",
+          "protocol": "tcp"
         }
-      }
+      ],
+      "systemControls": [],
+      "ulimits": [],
+      "volumesFrom": []
     }
-  ]
+  ],
+  "cpu": "256",
+  "enableFaultInjection": false,
+  "executionRoleArn": "arn:aws:iam::058264245223:role/LabRole",
+  "family": "fragments-task",
+  "memory": "512",
+  "networkMode": "awsvpc",
+  "placementConstraints": [],
+  "registeredAt": "2025-11-25T01:59:38.480Z",
+  "registeredBy": "arn:aws:sts::058264245223:assumed-role/voclabs/user3959284=proka-magar@myseneca.ca",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "revision": 9,
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "status": "ACTIVE",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:058264245223:task-definition/fragments-task:9",
+  "taskRoleArn": "arn:aws:iam::058264245223:role/LabRole",
+  "volumes": [],
+  "tags": []
 }
