@@ -50,7 +50,7 @@ jobs:
           VERSION_TAG: ${{ github.ref_name }}
         with:
           task-definition: fragments-definition.json
-          container-name: fragments
+          container-name: fragments-container   # <-- updated container name
           image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
           environment-variables: |
             NODE_ENV=production
@@ -62,6 +62,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.update-task-def.outputs.task-definition }}
-          service: fragments
-          cluster: fragments-cluster  
+          service: fragments-service    
+          cluster: fragments-cluster    
           wait-for-service-stability: true
