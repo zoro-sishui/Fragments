@@ -18,6 +18,10 @@ if (process.env.LOG_LEVEL === 'debug') {
   
 }
 
+const storageType = process.env.STORAGE_TYPE || 'memory';
+logger.info(`Server started on port ${port}, using storage: ${storageType}`);
+
+
 // Get the desired port from the process' environment. Default to `8080`
 const port = parseInt(process.env.PORT || '8080', 10);
 
