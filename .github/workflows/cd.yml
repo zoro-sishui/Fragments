@@ -59,14 +59,14 @@ jobs:
           VERSION_TAG: ${{ github.ref_name }}
         with:
           task-definition: fragments-definition.json
-          container-name: fragments-container
+          container-name: fragments
           image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
           environment-variables: |
             NODE_ENV=production
             LOG_LEVEL=info
             AWS_REGION=us-east-1
             AWS_S3_BUCKET_NAME=proka-fragments
-            PORT=80
+            PORT=8080
 
       # Deploy updated task definition to ECS service
       - name: Deploy to Amazon ECS
