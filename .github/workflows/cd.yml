@@ -1,6 +1,6 @@
 # Continuous Delivery Workflow
 #
-# Triggered whenever a new tag is pushed (e.g., v0.9.11)
+# Triggered whenever a new version tag is pushed (e.g., v0.9.12)
 name: cd
 
 on:
@@ -10,19 +10,20 @@ on:
 
 jobs:
   aws:
-    name: AWS
+    name: AWS Deploy Pipeline
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout the repo
+      # Checkout the code
       - name: Check out code
         uses: actions/checkout@v4
-      
+
       # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       # Configure AWS credentials
-      - name: Configure AWS Credentials using Secrets
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -30,25 +31,27 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      # Login to Amazon ECR
+      # Log in to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       # Build and push Docker image to ECR
-      - name: Build and push to Amazon ECR
+      - name: Build and Push Image
+        uses: docker/build-push-action@v6
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPO: fragments
           VERSION_TAG: ${{ github.ref_name }}
-        uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }},${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
 
-      #  Render ECS task definition with updated image
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: update-task-def
+      # Update the ECS task definition with the new image
+      - name: Render new ECS task definition
+        id: render-task
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -56,11 +59,20 @@ jobs:
           VERSION_TAG: ${{ github.ref_name }}
         with:
           task-definition: fragments-definition.json
-          container-name: fragments
+          container-name: fragments-container
           image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
           environment-variables: |
             NODE_ENV=production
             LOG_LEVEL=info
             AWS_REGION=us-east-1
             AWS_S3_BUCKET_NAME=proka-fragments
-            PORT=8080
+            PORT=80
+
+      # Deploy updated task definition to ECS service
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          cluster: fragments-cluster
+          service: fragments-service
+          wait-for-service-stability: true
