@@ -5,6 +5,7 @@ const { randomUUID } = require('crypto');
 const contentType = require('content-type');
 
 // Functions for working with fragment metadata/data using our DB
+// This will use AWS backend if AWS_REGION is set, otherwise memory backend
 const {
   readFragment,
   writeFragment,
@@ -12,7 +13,7 @@ const {
   writeFragmentData,
   listFragments,
   deleteFragment,
-} = require('./data/memory');
+} = require('./data');
 
 const db = {};
 
