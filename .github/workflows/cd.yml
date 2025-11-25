@@ -1,6 +1,3 @@
-# Continuous Delivery Workflow
-#
-# Triggered whenever a new version tag is pushed (e.g., v0.9.12)
 name: cd
 
 on:
@@ -14,15 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
       - name: Check out code
         uses: actions/checkout@v4
 
-      # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Configure AWS credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -31,12 +25,10 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      # Log in to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # Build and push Docker image to ECR
       - name: Build and Push Image
         uses: docker/build-push-action@v6
         env:
@@ -49,9 +41,9 @@ jobs:
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
             ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
 
-      # Update the ECS task definition with the new image
-      - name: Render new ECS task definition
-        id: render-task
+      # 🔥 REQUIRED BY ASSIGNMENT — update-task-def ID
+      - name: Fill in the new image ID in the ECS task definition
+        id: update-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -67,12 +59,15 @@ jobs:
             AWS_REGION=us-east-1
             AWS_S3_BUCKET_NAME=proka-fragments
             PORT=8080
+            # Add more as needed:
+            # API_URL=https://<your-load-balancer-dns>
+            # AWS_COGNITO_POOL_ID=...
+            # AWS_COGNITO_CLIENT_ID=...
 
-      # Deploy updated task definition to ECS service
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
           cluster: fragments-cluster
           service: fragments-service
           wait-for-service-stability: true
