@@ -63,7 +63,7 @@ jobs:
             LOG_LEVEL=info
             AWS_REGION=us-east-1
             AWS_S3_BUCKET_NAME=proka-fragments
-            PORT=8080
+            PORT=80
             AWS_COGNITO_POOL_ID=us-east-1_5H83Huaqe
             AWS_COGNITO_CLIENT_ID=4kk051vpb4itnl8k2237i0ogvb
 
