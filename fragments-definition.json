@@ -33,6 +33,10 @@
           "value": "proka-fragments"
         },
         {
+          "name": "AWS_DYNAMODB_TABLE_NAME",
+          "value": "fragments"
+        },
+        {
           "name": "AWS_COGNITO_POOL_ID",
           "value": "us-east-1_5H83Huaqe"
         },
