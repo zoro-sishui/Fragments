@@ -56,6 +56,18 @@ module.exports = async (req, res) => {
       );
     }
 
+    // Validate JSON if content type is application/json
+    if (parsedType.type === 'application/json') {
+      try {
+        JSON.parse(req.body.toString());
+      } catch (err) {
+        logger.warn('Invalid JSON body', { err });
+        return res.status(400).json(
+          createErrorResponse(400, 'Invalid JSON body')
+        );
+      }
+    }
+
     // Update the fragment data
     await fragment.setData(req.body);
 
