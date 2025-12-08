@@ -216,7 +216,7 @@ static async readFragmentData(ownerId, id) {
     }
     
     const textTypes = ['text/plain', 'text/html', 'text/markdown', 'application/json'];
-    const imageTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+    const imageTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/avif'];
 
     if (this.isText) {
       return textTypes;
@@ -245,7 +245,8 @@ static async readFragmentData(ownerId, id) {
         'image/png',
         'image/jpeg',
         'image/gif',
-        'image/webp'
+        'image/webp',
+        'image/avif'
       ];
       return supportedTypes.includes(type);
     } catch {
