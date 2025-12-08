@@ -119,4 +119,45 @@ describe('GET /v1/fragments/:id.:ext (conversion)', () => {
     expect(res.statusCode).toBe(200);
     expect(res.headers['content-type']).toBe('image/jpeg');
   });
+
+  test('json fragment can be retrieved as yaml', async () => {
+    const data = { hello: "world", foo: ["bar", "baz"] };
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'application/json')
+      .send(data);
+    
+    expect(postRes.statusCode).toBe(201);
+    const id = postRes.body.fragment.id;
+
+    const res = await request(app)
+      .get(`/v1/fragments/${id}.yaml`)
+      .auth('user1@email.com', 'password1');
+    
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toMatch(/application\/yaml/);
+    expect(res.text).toContain('hello: world');
+  });
+
+  test('yaml fragment can be retrieved as json', async () => {
+    const yamlData = "hello: world\nfoo:\n  - bar\n  - baz\n";
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'application/yaml')
+      .send(yamlData);
+    
+    expect(postRes.statusCode).toBe(201);
+    const id = postRes.body.fragment.id;
+
+    const res = await request(app)
+      .get(`/v1/fragments/${id}.json`)
+      .auth('user1@email.com', 'password1');
+    
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toMatch(/application\/json/);
+    const json = JSON.parse(res.text);
+    expect(json).toEqual({ hello: "world", foo: ["bar", "baz"] });
+  });
 });
