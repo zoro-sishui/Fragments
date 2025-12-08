@@ -95,6 +95,21 @@ module.exports = async (req, res) => {
         const yamlObj = yaml.parse(textData);
         convertedData = JSON.stringify(yamlObj);
       }
+      // text/csv -> application/json
+      else if (originalMime === 'text/csv' && targetMime === 'application/json') {
+        // Simple CSV to JSON conversion (assuming header row)
+        const lines = textData.trim().split('\n');
+        const headers = lines[0].split(',');
+        const result = lines.slice(1).map(line => {
+          const obj = {};
+          const currentline = line.split(',');
+          headers.forEach((header, i) => {
+            obj[header] = currentline[i];
+          });
+          return obj;
+        });
+        convertedData = JSON.stringify(result);
+      }
       else {
          // Fallback for unsupported text conversions
          logger.warn('Unsupported text conversion requested', { from: originalMime, to: targetMime });
