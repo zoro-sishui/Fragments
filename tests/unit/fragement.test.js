@@ -176,7 +176,7 @@ describe('Fragment class', () => {
 
     test('formats returns image types for image types', () => {
       const fragment = new Fragment({ ownerId: '1234', type: 'image/png', size: 0 });
-      expect(fragment.formats).toEqual(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+      expect(fragment.formats).toEqual(['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/avif']);
     });
 
     test('formats returns only the mime type for application/json', () => {
