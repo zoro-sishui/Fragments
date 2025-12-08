@@ -15,8 +15,6 @@ const {
   deleteFragment,
 } = require('./data');
 
-const db = {};
-
 class Fragment {
   constructor({ id = randomUUID(), ownerId, created = new Date(), updated = new Date(), type, size = 0 }) {
     if (!ownerId || !type) {
@@ -58,6 +56,9 @@ class Fragment {
       throw new Error(`Unable to fetch fragments for user ${ownerId}: ${error.message}`);
     }
   }
+
+  /**
+   * Gets a fragment for the user by the given id.
 
 // assignment 2
   static async ListFragments(ownerId, expand = false) {
@@ -238,7 +239,9 @@ static async readFragmentData(ownerId, id) {
         'text/plain',
         'text/html',
         'text/markdown',
+        'text/csv',
         'application/json',
+        'application/yaml',
         'image/png',
         'image/jpeg',
         'image/gif',

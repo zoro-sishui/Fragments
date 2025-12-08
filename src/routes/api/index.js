@@ -31,6 +31,7 @@ const rawBody = () =>
 // Define our routes
 router.get('/fragments', require('./get'));
 router.post('/fragments', rawBody(), require('./post'));
+router.put('/fragments/:id', rawBody(), require('./put'));
 // Return fragment possibly converted by extension (must be before :id)
 router.get('/fragments/:id.:ext', require('./get-id-ext'));
 // Return only fragment metadata

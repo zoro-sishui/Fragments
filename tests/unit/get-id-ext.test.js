@@ -2,6 +2,7 @@
 
 const request = require('supertest');
 const app = require('../../src/app');
+const sharp = require('sharp');
 
 describe('GET /v1/fragments/:id.:ext (conversion)', () => {
   test('unauthenticated requests are denied', () =>
@@ -33,7 +34,7 @@ describe('GET /v1/fragments/:id.:ext (conversion)', () => {
     const id = postRes.body.fragment.id;
 
     const res = await request(app)
-      .get(`/v1/fragments/${id}.txt`)
+      .get(`/v1/fragments/${id}.exe`)
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(415);
     expect(res.body.status).toBe('error');
@@ -91,5 +92,31 @@ describe('GET /v1/fragments/:id.:ext (conversion)', () => {
       .auth('user1@email.com', 'password1');
     expect(convRes.statusCode).toBe(415);
     expect(convRes.body.status).toBe('error');
+  });
+
+  test('can convert png to jpeg', async () => {
+    const pngBuffer = await sharp({
+      create: {
+        width: 1,
+        height: 1,
+        channels: 4,
+        background: { r: 255, g: 0, b: 0, alpha: 0.5 }
+      }
+    }).png().toBuffer();
+
+    const postRes = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'image/png')
+      .send(pngBuffer);
+    
+    const id = postRes.body.fragment.id;
+
+    const res = await request(app)
+      .get(`/v1/fragments/${id}.jpg`)
+      .auth('user1@email.com', 'password1');
+    
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toBe('image/jpeg');
   });
 });

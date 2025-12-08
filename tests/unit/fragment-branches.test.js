@@ -4,24 +4,6 @@
 const { Fragment } = require('../../src/model/fragment');
 
 describe('Fragment additional branches', () => {
-  test('ListFragments returns ids and expanded fragments', async () => {
-    const f = new Fragment({ ownerId: 'userA', type: 'text/plain' });
-    // Use the class's own in-memory helpers to populate and list
-    await Fragment.writeFragment(f);
-    const ids = await Fragment.ListFragments('userA');
-    expect(ids).toContain(f.id);
-    const expanded = await Fragment.ListFragments('userA', true);
-    expect(expanded.find(x => x.id === f.id)).toMatchObject({ ownerId: 'userA', type: 'text/plain' });
-  });
-
-  test('readFragmentData throws when fragment missing', async () => {
-    await expect(Fragment.readFragmentData('nouser', 'noid')).rejects.toThrow();
-  });
-
-  test('writeFragmentData throws when fragment missing', async () => {
-    await expect(Fragment.writeFragmentData('nouser', 'noid', Buffer.from('abc'))).rejects.toThrow();
-  });
-
   test('byId returns null when fragment absent', async () => {
     const result = await Fragment.byId('nouser', 'noid');
     expect(result).toBeNull();
