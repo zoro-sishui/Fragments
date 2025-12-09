@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     logger.debug('Updating fragment', { id, ownerId: req.user, contentType: req.get('Content-Type') });
 
-    // Check if we have a supported content type
+    // Check if it has a supported content type
     if (!req.get('Content-Type')) {
       logger.warn('Missing Content-Type header');
       return res.status(400).json(
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
       );
     }
 
-    // Get the fragment to verify it exists
+    // Get the fragment to check if  it exists
     const fragment = await Fragment.byId(req.user, id);
     
     if (!fragment) {

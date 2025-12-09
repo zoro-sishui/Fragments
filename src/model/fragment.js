@@ -41,9 +41,9 @@ class Fragment {
 
   /**
    * Get all fragments (id or full) for the given user
-   * @param {string} ownerId user's hashed email
-   * @param {boolean} expand whether to expand ids to full fragments
-   * @returns Promise<Array<Fragment>>
+   * @param {string} ownerId 
+   * @param {boolean} expand 
+   * @returns
    */
   static async byUser(ownerId, expand = false) {
     try {
@@ -101,9 +101,9 @@ static async readFragmentData(ownerId, id) {
 
   /**
    * Gets a fragment for the user by the given id.
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<Fragment>
+   * @param {string} ownerId 
+   * @param {string} id 
+   * @returns 
    */
   static async byId(ownerId, id) {
     try {
@@ -119,9 +119,9 @@ static async readFragmentData(ownerId, id) {
 
   /**
    * Delete the user's fragment data and metadata for the given id
-   * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
-   * @returns Promise<void>
+   * @param {string} ownerId 
+   * @param {string} id 
+   * @returns 
    */
   static async delete(ownerId, id) {
     try {
@@ -132,8 +132,8 @@ static async readFragmentData(ownerId, id) {
   }
 
   /**
-   * Saves the current fragment (metadata) to the database
-   * @returns Promise<void>
+   * Save the current fragment metadata to the database
+   * @returns 
    */
   async save() {
     try {
@@ -146,7 +146,7 @@ static async readFragmentData(ownerId, id) {
 
   /**
    * Gets the fragment's data from the database
-   * @returns Promise<Buffer>
+   * @returns 
    */
   async getData() {
     try {
@@ -157,9 +157,9 @@ static async readFragmentData(ownerId, id) {
   }
 
   /**
-   * Set's the fragment's data in the database
+   * Set the fragment's data in the database
    * @param {Buffer} data
-   * @returns Promise<void>
+   * @returns 
    */
   async setData(data) {
     if (!Buffer.isBuffer(data)) {
@@ -176,8 +176,8 @@ static async readFragmentData(ownerId, id) {
   }
 
   /**
-   * Deletes the fragment's data and metadata from the database
-   * @returns Promise<void>
+   * Delete the fragment's data and metadata from the database
+   * @returns 
    */
   async delete() {
     try {
@@ -188,9 +188,9 @@ static async readFragmentData(ownerId, id) {
   }
 
   /**
-   * Returns the mime type (e.g., without encoding) for the fragment's type:
+   * Returns the mime type  for the fragment's type:
    * "text/html; charset=utf-8" -> "text/html"
-   * @returns {string} fragment's mime type (without encoding)
+   * @returns {string} 
    */
   get mimeType() {
     const { type } = contentType.parse(this.type);
@@ -199,7 +199,7 @@ static async readFragmentData(ownerId, id) {
 
   /**
    * Returns true if this fragment is a text/* mime type
-   * @returns {boolean} true if fragment's type is text/*
+   * @returns {boolean}  
    */
   get isText() {
     return this.mimeType.startsWith('text/');

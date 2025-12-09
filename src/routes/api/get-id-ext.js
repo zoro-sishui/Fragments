@@ -54,14 +54,14 @@ module.exports = async (req, res) => {
       return res.status(415).json(createErrorResponse(415, `Unsupported extension: .${ext}`));
     }
 
-    // Get original data
+   
     const data = await fragment.getData();
     if (!data) {
       logger.warn('Fragment data not found (ext)', { id, ownerId: req.user });
       return res.status(404).json(createErrorResponse(404, 'Fragment data not found'));
     }
 
-    // Get original mime type
+   
     const originalMime = contentType.parse(fragment.type).type; 
 
     // If same type requested, return as-is
@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
       }
       // text/csv -> application/json
       else if (originalMime === 'text/csv' && targetMime === 'application/json') {
-        // Simple CSV to JSON conversion (assuming header row)
+        // Simple CSV to JSON conversion 
         const lines = textData.trim().split('\n');
         const headers = lines[0].split(',');
         const result = lines.slice(1).map(line => {
@@ -111,7 +111,6 @@ module.exports = async (req, res) => {
         convertedData = JSON.stringify(result);
       }
       else {
-         // Fallback for unsupported text conversions
          logger.warn('Unsupported text conversion requested', { from: originalMime, to: targetMime });
          return res.status(415).json(
            createErrorResponse(415, `Conversion from ${originalMime} to ${targetMime} is not supported`)
@@ -153,7 +152,6 @@ module.exports = async (req, res) => {
     }
 
     // Send converted data
-    // If text, ensure we send as utf-8
     if (convertedType.startsWith('text/') || convertedType === 'application/json' || convertedType === 'application/yaml') {
         res.setHeader('Content-Type', contentType.format({ type: convertedType, parameters: { charset: 'utf-8' } }));
         return res.status(200).send(convertedData);
